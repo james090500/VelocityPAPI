@@ -1,0 +1,6 @@
+name: VelocityPAPI
+version: 1.0.0
+author: james090500
+main: om.james090500.VelocityPAPI.paper.PaperMain
+
+depend: [PlaceholderAPI]

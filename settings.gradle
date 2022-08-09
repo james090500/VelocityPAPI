@@ -1,0 +1,5 @@
+rootProject.name = 'VelocityPAPI'
+include 'paper'
+include 'velocity'
+include 'shared'
+
