@@ -1,13 +1,9 @@
 package com.james090500.VelocityPAPI.velocity.api;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.james090500.VelocityPAPI.shared.VPObject;
 import com.james090500.VelocityPAPI.velocity.VelocityMain;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
-import lombok.Setter;
 
 import java.security.SecureRandom;
 import java.util.Random;
@@ -74,11 +70,7 @@ public class VelocityPAPI {
             VelocityMain.getPendingReplacements().put(vpObject.getMessageKey(), vpObject);
 
             // Send Packet
-            ByteArrayDataOutput buf = ByteStreams.newDataOutput();
-            buf.writeUTF(vpObject.getMessageKey());
-            buf.writeUTF(vpObject.getUuid().toString());
-            buf.writeUTF(vpObject.getMessage());
-            player.getCurrentServer().get().sendPluginMessage(VelocityMain.getStartChannel(), buf.toByteArray());
+            player.getCurrentServer().get().sendPluginMessage(VelocityMain.getStartChannel(), vpObject.writePending());
 
             // Wait for result by looping until it's found
             CompletableFuture<VPObject> vpObjectCompletableFuture = new CompletableFuture<>();

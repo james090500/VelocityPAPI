@@ -1,16 +1,12 @@
 package com.james090500.VelocityPAPI.paper;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import com.james090500.VelocityPAPI.shared.VPObject;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.UUID;
 
 public class PaperMain extends JavaPlugin implements PluginMessageListener {
 
@@ -41,16 +37,9 @@ public class PaperMain extends JavaPlugin implements PluginMessageListener {
         //Make sure the channel is correct
         if(!channel.equals(startChannel)) return;
 
-        ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        UUID uuid = UUID.fromString(in.readUTF());
-        String placeholders = in.readUTF();
+        VPObject vpObject = VPObject.readPending(message);
+        vpObject.setResult(PlaceholderAPI.setPlaceholders(player, vpObject.getMessage()));
 
-        String convertedText = PlaceholderAPI.setPlaceholders(player, placeholders);
-
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(player.getUniqueId().toString());
-        out.writeUTF(convertedText);
-
-        player.sendPluginMessage(this, endChannel, out.toByteArray());
+        player.sendPluginMessage(this, endChannel, vpObject.writeComplete());
     }
 }

@@ -1,14 +1,10 @@
 package com.james090500.VelocityPAPI.velocity;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.james090500.VelocityPAPI.shared.VPObject;
 import com.james090500.VelocityPAPI.velocity.api.VelocityPAPI;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.event.player.PlayerChannelRegisterEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -21,7 +17,6 @@ import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Plugin(id = "velocitypapi", name = "VelocityPAPI", version = "1.0.0", description = "Placeholders everywhere", authors = { "james095000" })
@@ -69,13 +64,8 @@ public class VelocityMain {
         //Make sure its not from a player
         if(event.getSource() instanceof Player) return;
 
-        ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
-        String messageKey = in.readUTF();
-        String result = in.readUTF();
-
-        VPObject vpObject = getPendingReplacements().get(messageKey);
-        vpObject.setResult(result);
-        getPendingReplacements().put(messageKey, vpObject);
+        VPObject completedObject = VPObject.readComplete(event.getData());
+        getPendingReplacements().put(completedObject.getMessageKey(), completedObject);
     }
 
 }
